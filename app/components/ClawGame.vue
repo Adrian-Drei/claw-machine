@@ -93,9 +93,10 @@ onUnmounted(() => {
 
 
 <template>
-  <main ref="game" tabindex="0" aria-label="Claw Club game. Arrow keys to move, Space to drop or play again after a catch." class="min-h-screen bg-[#fffbee] px-3 py-3 font-sans text-[#292725] outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-violet-500 sm:px-6" @keydown="keyDown" @keyup="keyUp" @focusout="stop" @pointerdown.capture="musicOnButton" @click.capture="musicOnButton">
+  <main ref="game" tabindex="0" aria-label="Claw Club game. Arrow keys to move, Space to drop or play again after a catch." class="relative isolate min-h-screen bg-gradient-to-b from-[#fffdf2] via-[#fff9ed] to-[#fff0f3] px-3 py-3 font-sans text-[#292725] outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-violet-500 sm:px-6" @keydown="keyDown" @keyup="keyUp" @focusout="stop" @pointerdown.capture="musicOnButton" @click.capture="musicOnButton">
+    <GameBackdrop />
     <audio ref="backgroundMusic" src="/audio/yummy-flavor.mp3" loop preload="none" aria-hidden="true" />
-    <header class="mx-auto flex max-w-[1400px] items-center justify-between gap-2">
+    <header class="relative z-10 mx-auto flex max-w-[1400px] items-center justify-between gap-2">
       <div class="flex items-center gap-1 text-base font-black sm:gap-3 sm:text-3xl">
         <svg viewBox="-64 -38 128 132" aria-hidden="true" class="h-14 w-14 sm:h-20 sm:w-20"><ClawIllustration /></svg>
         <span>Classroom Arcade</span>
@@ -109,14 +110,10 @@ onUnmounted(() => {
         </button>
       </div>
     </header>
-    <section class="mx-auto max-w-[min(1100px,118vh)] text-center">
+    <section class="relative z-10 mx-auto max-w-[min(1100px,118vh)] text-center">
       <h1 class="text-[clamp(2rem,5.5vw,4.8rem)] leading-[1.12] font-black tracking-tight [text-shadow:1px_0_0_currentColor,-1px_0_0_currentColor,0_1px_0_currentColor,0_-1px_0_currentColor]">Catch a little friend!</h1>
       <p class="mt-1 text-sm font-bold sm:text-[clamp(1rem,2vw,1.7rem)]">Scoot, drop, and meet your new buddy!</p>
       <div class="relative mx-auto mt-1 max-w-[min(1000px,80vh)] sm:mt-2">
-        <div aria-hidden="true" class="pointer-events-none absolute -left-[9%] top-[25%] hidden rotate-[-15deg] text-5xl text-[#ffda6a] [text-shadow:2px_2px_0_#292725,-2px_-2px_0_#292725,2px_-2px_0_#292725,-2px_2px_0_#292725] xl:block">★</div>
-        <div aria-hidden="true" class="pointer-events-none absolute -right-[9%] top-[38%] hidden rotate-12 text-5xl text-[#ffda6a] [text-shadow:2px_2px_0_#292725,-2px_-2px_0_#292725,2px_-2px_0_#292725,-2px_2px_0_#292725] xl:block">★</div>
-        <div aria-hidden="true" class="pointer-events-none absolute -left-[6%] top-[65%] hidden text-4xl text-[#ffa8bd] xl:block">✦</div>
-        <div aria-hidden="true" class="pointer-events-none absolute -right-[7%] top-[72%] hidden text-4xl text-[#ffa8bd] xl:block">✦</div>
         <GameScene :phase="phase" :x="x" :y="y" :closure="closure" :prizes="prizes" :caught="caught" :won="won" :fall="fall" @aim="windowAim" />
         <GameControls class="absolute bottom-[4%] left-[9%] h-[18%] w-[65%]" :disabled="!available" :direction="direction" @move="move" @stop="stop" @drop="startDrop" />
       </div>
@@ -138,6 +135,7 @@ onUnmounted(() => {
     </section>
   </main>
 </template>
+
 
 
 

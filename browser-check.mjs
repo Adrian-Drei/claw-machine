@@ -63,9 +63,9 @@ try {
   await page.waitForTimeout(500)
   const left = await page.getByRole('button', { name: 'Move claw left' }).boundingBox()
   await page.mouse.move(left.x + left.width / 2, left.y + left.height / 2)
-  assert.match(await page.getByRole('button', { name: 'Move claw left' }).locator('img').getAttribute('src'), /left-button-pressed/)
+  assert.match(await page.getByRole('button', { name: 'Move claw left' }).locator('img').getAttribute('src'), /right-button-normal/)
   await page.mouse.down()
-  assert.match(await page.getByRole('button', { name: 'Move claw left' }).locator('img').getAttribute('src'), /left-button-normal/)
+  assert.match(await page.getByRole('button', { name: 'Move claw left' }).locator('img').getAttribute('src'), /right-button-pressed/)
   await page.waitForTimeout(450)
   await page.mouse.up()
   await page.getByRole('button', { name: 'Drop claw', exact: true }).click()
@@ -82,6 +82,7 @@ try {
   assert.equal(errors.length, 0)
   console.log('Browser errors', errors)
 } finally { await browser?.close(); server.close() }
+
 
 
 
