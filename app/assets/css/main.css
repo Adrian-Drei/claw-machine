@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Arial Rounded MT Bold', 'Comic Sans MS', 'Trebuchet MS', sans-serif;
+}
