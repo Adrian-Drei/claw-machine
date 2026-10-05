@@ -19,7 +19,7 @@ Upload the contents of `.output/public` to a static web host. The generated demo
 - Hold left/right buttons or arrow keys to move.
 - Click or tap the machine window to aim.
 - Click Drop Claw, use Enter on that button, or press Space while the game has focus.
-- Play again restores all prizes and resets any running sequence.
+- Play again starts the next attempt with the remaining prizes, refilling to three only when the machine is empty.
 - Sound uses short browser-generated tones; it starts off.
 - Fullscreen uses the native browser API when supported.
 
@@ -63,3 +63,7 @@ The latest design uses the Scoot / Drop / Say hello instruction badges, the budd
 Space drops during normal play and restores the game after a successful catch. The visible Space badge supports the same action with a pointer or touch. The floor opening follows the supplied slanted quadrilateral reference.
 
 Background music: the supplied Yummy Flavor MP3 is copied unchanged to public/audio/yummy-flavor.mp3. Sound starts off; the sound button starts, pauses, and resumes the looping track at 35% volume. Music continues across replay and stops when the component unmounts. Edge checks verified playback, pause/resume, replay continuity, and looping at the end.
+
+
+Delivered prizes are removed from the active inventory. The claw returns smoothly to center before the attempt finishes. Retry keeps all remaining prizes and refills only an empty machine. Inventory checks in Edge cover three successive catches, misses at an empty position, center return, preserved inventory, and empty-machine refill.
+

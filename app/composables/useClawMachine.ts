@@ -1,4 +1,4 @@
-export type GamePhase = 'idle' | 'dropping' | 'closing' | 'lifting' | 'delivering' | 'releasing' | 'finished'
+export type GamePhase = 'idle' | 'dropping' | 'closing' | 'lifting' | 'delivering' | 'releasing' | 'returning' | 'finished'
 
 export const CLAW_GEOMETRY = {
   homeY: 110,
@@ -18,7 +18,8 @@ export function useClawMachine() {
   const won = ref(false)
   const fall = ref(0)
   const message = ref('Your little friends are waiting!')
-  const prizes = [155, 300, 445]
+  const initialPrizes = [155, 300, 445]
+  const prizes = ref([...initialPrizes])
   let frame = 0
   let last = 0
   let elapsed = 0
@@ -44,6 +45,7 @@ export function useClawMachine() {
   }
   function reset() {
     stop(); x.value = 300; y.value = CLAW_GEOMETRY.homeY; closure.value = 0
+    if (prizes.value.length === 0) prizes.value = [...initialPrizes]
     caught.value = null; won.value = false; fall.value = 0
     message.value = 'Your little friends are waiting!'
     advance('idle')
@@ -68,7 +70,7 @@ export function useClawMachine() {
       case 'closing':
         closure.value = Math.min(elapsed / 0.35, 1)
         if (closure.value === 1) {
-          caught.value = prizes.findIndex(position => Math.abs(position - x.value) <= 48)
+          caught.value = prizes.value.findIndex(position => Math.abs(position - x.value) <= 48)
           if (caught.value === -1) caught.value = null
           message.value = caught.value === null ? 'Almost! Let’s try again.' : 'Got a little friend!'
           advance('lifting')
@@ -88,7 +90,21 @@ export function useClawMachine() {
       case 'releasing':
         closure.value = 1 - Math.min(elapsed / 0.3, 1)
         fall.value = CLAW_GEOMETRY.fallDistance * Math.min(elapsed / 0.85, 1) ** 2
-        if (elapsed >= 0.85) { won.value = true; message.value = 'Hooray! A new friend for you!'; advance('finished') }
+        if (elapsed >= 0.85) {
+          if (caught.value !== null) prizes.value.splice(caught.value, 1)
+          caught.value = null
+          won.value = true
+          message.value = 'Your buddy is in the chute! Heading home…'
+          startX = x.value
+          advance('returning')
+        }
+        break
+      case 'returning':
+        x.value = startX + (300 - startX) * ease(p)
+        if (p === 1) {
+          message.value = 'Hooray! A new friend for you!'
+          advance('finished')
+        }
         break
     }
     frame = requestAnimationFrame(tick)
@@ -108,6 +124,7 @@ export function useClawMachine() {
   })
   return { phase, x, y, closure, direction, caught, won, fall, message, prizes, available, move, stop, aim, drop, reset }
 }
+
 
 
 

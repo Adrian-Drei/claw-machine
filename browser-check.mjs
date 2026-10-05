@@ -37,7 +37,8 @@ try {
   const trace = await page.evaluate(() => window.clawTrace)
   assert(Math.max(...trace.map(point => point.y)) <= 179.01, 'Claw must stop at ball height')
   assert(Math.max(...trace.map((point, index) => index ? Math.abs(point.y - trace[index - 1].y) : 0)) < 15, 'Claw must lift without jumping')
-  assert(Math.abs(trace.at(-1).x - 521) < 0.1, 'Delivery must align with opening center')
+  assert(Math.abs(Math.max(...trace.map(point => point.x)) - 521) < 0.1, 'Delivery must align with opening center')
+  assert(Math.abs(trace.at(-1).x - 300) < 0.1, 'Claw must return to center')
   await page.screenshot({ path: 'delivery-preview.png', fullPage: true })
   console.log('PASS grab height, continuous lifting, centered chute delivery, and collected prize')
   await page.keyboard.press('Space')
@@ -58,6 +59,8 @@ try {
   await page.getByRole('status').filter({ hasText: 'Hooray!' }).waitFor({ timeout: 9000 })
   console.log('PASS held arrow movement and catch')
   await page.getByRole('button', { name: 'Play again', exact: true }).click()
+  await page.reload()
+  await page.waitForTimeout(500)
   const left = await page.getByRole('button', { name: 'Move claw left' }).boundingBox()
   await page.mouse.move(left.x + left.width / 2, left.y + left.height / 2)
   assert.match(await page.getByRole('button', { name: 'Move claw left' }).locator('img').getAttribute('src'), /left-button-pressed/)
@@ -79,6 +82,7 @@ try {
   assert.equal(errors.length, 0)
   console.log('Browser errors', errors)
 } finally { await browser?.close(); server.close() }
+
 
 
 
